@@ -69,6 +69,7 @@ function mate(selected) {
             },
             fitness: 0
         }
+        child1 = mutate(child1)
 
         let child2 = {
             color: {
@@ -78,6 +79,8 @@ function mate(selected) {
             },
             fitness: 0
         }
+        child2 = mutate(child2)
+
         nextGeneration.push(child1)
         nextGeneration.push(child2)
         i++
@@ -98,11 +101,29 @@ function checkIfTargetIsLocated(population, target) {
     return false
 }
 
+function mutate(chromossome) {
+    let random = Math.floor(Math.random() * 100)
+    if (random <= 1) {
+        let randomRGB = Math.floor(Math.random() * 3) + 1
+        if (randomRGB == 1) {
+            chromossome.color.r = Math.floor(Math.random() * 255)
+        }
+        if (randomRGB == 2) {
+            chromossome.color.g = Math.floor(Math.random() * 255)
+        }
+        if (randomRGB == 3) {
+            chromossome.color.b = Math.floor(Math.random() * 255)   
+        }
+    }
+    return chromossome
+}
+
 let generationIndex = 1;
 let population = generateRandomPopulation()
 
 while (!checkIfTargetIsLocated(population, target)) {
     console.log("Geração " + generationIndex)
+    console.log(population)
     for (let i = 0; i < population.length; i++) {
         population[i].fitness = calculateDistanceOfColor(target, population[i].color)
     }
