@@ -92,7 +92,6 @@ function mate(selected) {
 function checkIfTargetIsLocated(population, target) {
     for (let i = 0; i < population.length; i++) {
         let fitness = calculateDistanceOfColor(target, population[i].color)
-        console.log(fitness)
         if (fitness == 0) {
             return true
         }
@@ -103,7 +102,7 @@ function checkIfTargetIsLocated(population, target) {
 
 function mutate(chromossome) {
     let random = Math.floor(Math.random() * 100)
-    if (random <= 1) {
+    if (random <= 10) {
         let randomRGB = Math.floor(Math.random() * 3) + 1
         if (randomRGB == 1) {
             chromossome.color.r = Math.floor(Math.random() * 255)
