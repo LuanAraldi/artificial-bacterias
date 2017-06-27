@@ -55,7 +55,7 @@ export default class Bacterium extends Component {
             console.log(populationHex)
 
             const celulas = populationHex.map((cor, index) => 
-                <div className = "bacterias"index = {index}>
+                <div className = "bacterias" index = {index}>
                     <h2>{index}</h2>
                     <svg height="100" width="100" >
                         <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill={cor} />
