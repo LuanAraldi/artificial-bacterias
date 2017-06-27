@@ -4,7 +4,7 @@ let target = {
     b: 150
 }
 
-function generateRandomPopulation() {
+export function generateRandomPopulation() {
     let population = []
     for (let i = 0; i < 20; i++) {
         let asset = {
@@ -20,7 +20,7 @@ function generateRandomPopulation() {
     return population
 }
 
-function calculateDistanceOfColor(target, color) {
+export function calculateDistanceOfColor(target, color) {
     let rDistance = Math.pow((color.r - target.r), 2)
     let gDistance = Math.pow((color.g - target.g), 2)
     let bDistance = Math.pow((color.b - target.b), 2)
@@ -29,7 +29,7 @@ function calculateDistanceOfColor(target, color) {
     return totalDistance
 }
 
-function calculatePercentOfMating(population) {
+export function calculatePercentOfMating(population) {
     let selected = []
     for (let i = 0; i < population.length; i++) {
         let asset1 = population[i]
@@ -57,7 +57,7 @@ function calculatePercentOfMating(population) {
     return selected
 }
 
-function mate(selected) {
+export function mate(selected) {
     let nextGeneration = []
 
     for (let i = 0; i < selected.length; i++) {
@@ -89,7 +89,7 @@ function mate(selected) {
     return nextGeneration
 }
 
-function checkIfTargetIsLocated(population, target) {
+export function checkIfTargetIsLocated(population, target) {
     for (let i = 0; i < population.length; i++) {
         let fitness = calculateDistanceOfColor(target, population[i].color)
         if (fitness == 0) {
@@ -100,7 +100,7 @@ function checkIfTargetIsLocated(population, target) {
     return false
 }
 
-function mutate(chromossome) {
+export function mutate(chromossome) {
     let random = Math.floor(Math.random() * 100)
     if (random <= 10) {
         let randomRGB = Math.floor(Math.random() * 3) + 1
@@ -121,8 +121,6 @@ let generationIndex = 1;
 let population = generateRandomPopulation()
 
 while (!checkIfTargetIsLocated(population, target)) {
-    console.log("Geração " + generationIndex)
-    console.log(population)
     for (let i = 0; i < population.length; i++) {
         population[i].fitness = calculateDistanceOfColor(target, population[i].color)
     }
