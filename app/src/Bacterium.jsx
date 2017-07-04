@@ -31,53 +31,59 @@ export default class Bacterium extends Component {
         let generationIndex = 1;
         let population = generateRandomPopulation()
 
-        while (!checkIfTargetIsLocated(population, target)) {
-            for (let i = 0; i < population.length; i++) {
-                population[i].fitness = calculateDistanceOfColor(target, population[i].color)
-            }
-
-            let selected = calculatePercentOfMating(population)
-            population = mate(selected)
-            generationIndex++
-
-            let populationHex = []
-
-            function transformaEmHex(populationHex, population) {
-            
-                for (var index = 0; index < population.length; index++) {
-                    populationHex.push(rgbToHex(population[index].color.r, population[index].color.g, population[index].color.b))
+        function gera(target, population, generationIndex) {
+            let populacao = []
+            while (!checkIfTargetIsLocated(population, target)) {
+                for (let i = 0; i < population.length; i++) {
+                    population[i].fitness = calculateDistanceOfColor(target, population[i].color)
                 }
+
+                let selected = calculatePercentOfMating(population)
+                population = mate(selected)
+                populacao.push(population)
+                generationIndex++
             }
+            return populacao
+        }
 
+        let populationHex = []
 
-            target = rgbToHex(target.r, target.g, target.b)
-            transformaEmHex(populationHex, population)
-            console.log(populationHex)
+        function transformaEmHex(populationHex, population) {
+            for (var index = 0; index < population.length; index++) {
+                populationHex.push(rgbToHex(population[index].color.r, population[index].color.g, population[index].color.b))
+            }
+        }
+        
+        let geracoes = gera(target, population, generationIndex)
 
-            const celulas = populationHex.map((cor, index) => 
-                <div className = "bacterias" index = {index}>
-                    <h2>{index}</h2>
-                    <svg height="100" width="100" >
-                        <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill={cor} />
+        target = rgbToHex(target.r, target.g, target.b)
+        for (let index = 0; index < geracoes.length; index++) {
+            transformaEmHex(populationHex, geracoes[index]) 
+        }
+        console.log(geracoes)
+
+        const celulas = populationHex.map((cor, index) =>
+            <div className="bacterias" index={index}>
+                <h2>{index}</h2>
+                <svg height="100" width="100" >
+                    <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill={cor} />
+                </svg>
+            </div>
+        )
+
+        return (
+            <div>
+                <div>
+                    <h1>Target</h1>
+                    <svg height="100" width="100">
+                        <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill={target} />
                     </svg>
                 </div>
-                
-            )
-
-            return (
                 <div>
-                    <div>
-                        <h1>Target</h1>
-                        <svg height="100" width="100">
-                            <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill={target} />
-                        </svg>  
-                    </div>
-                    <div>
-                        <h1>Gerações</h1>
-                        {celulas}
-                    </div>
+                    <h1>Gerações</h1>
+                    {celulas}
                 </div>
-            )
-        }
+            </div>
+        )
     }
 }
