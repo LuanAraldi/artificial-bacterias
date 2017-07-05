@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <h1> Objetivo</h1>
-    <bacteria :red="target.color.r" :green="target.color.g" :blue="target.color.b" :stroke="target.stroke"></bacteria>
+    <div style="padding-left: 44%; padding-right: 44%;">
+      <sketch-picker v-model="targetcolor"></sketch-picker>
+    </div>
     <div>
       <h2>Geração {{geracao}}</h2>
     </div>
@@ -19,15 +21,20 @@
 </template>
 
 <script>
+import { Sketch } from 'vue-color'
 
 export default {
+  components: {
+    'sketch-picker': Sketch
+  },
   name: 'app',
   data () {
     return {
       geracao: 1,
       population: {},
       target: { color: { r: 12, g: 162, b: 88 }, stroke: 'black' },
-      velocidade: 10
+      velocidade: 10,
+      targetcolor: {}
     }
   },
   created () {
@@ -38,6 +45,10 @@ export default {
       return new Promise(resolve => setTimeout(resolve, ms))
     },
     comecaloop: async function () {
+      console.log(this.targetcolor)
+      this.target.color.r = this.targetcolor.rgba.r
+      this.target.color.g = this.targetcolor.rgba.g
+      this.target.color.b = this.targetcolor.rgba.b
       this.geracao = 1
       this.population = this.generateRandomPopulation()
       while (!this.checkIfTargetIsLocated(this.population, this.target)) {
@@ -53,7 +64,7 @@ export default {
     },
     generateRandomPopulation: function () {
       let population = []
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 30; i++) {
         let asset = {
           id: Math.floor(Math.random() * 999999),
           stroke: 'black',
@@ -90,7 +101,7 @@ export default {
         }
       }
 
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 15; i++) {
         let asset1 = population[i]
         let asset2 = population[i + 10]
 
