@@ -2,12 +2,19 @@
   <div id="app">
     <h1> Objetivo</h1>
     <bacteria :red="target.color.r" :green="target.color.g" :blue="target.color.b" :stroke="target.stroke"></bacteria>
-    {{geracao}}
-    <button @click="comecaloop">Começa</button>
-    <span v-for="(asset, index) in population" :key="asset.id">
-      <div v-if="index % 10 == 0"></div>
-      <bacteria :red="asset.color.r" :green="asset.color.g" :blue="asset.color.b" :stroke="asset.stroke"></bacteria>
-    </span>
+    <div>
+      <h2>Geração {{geracao}}</h2>
+    </div>
+    <div>
+      <input type="number" v-model="velocidade">
+      <button @click="comecaloop">Começa</button>
+    </div>
+    <div>
+      <span v-for="(asset, index) in population" :key="asset.id">
+        <div v-if="index % 10 == 0"></div>
+        <bacteria :red="asset.color.r" :green="asset.color.g" :blue="asset.color.b" :stroke="asset.stroke"></bacteria>
+      </span>
+    </div>
   </div>
 </template>
 
@@ -19,7 +26,8 @@ export default {
     return {
       geracao: 1,
       population: {},
-      target: {color: { r: 150, g: 125, b: 150 }, stroke: 'black'}
+      target: { color: { r: 12, g: 162, b: 88 }, stroke: 'black' },
+      velocidade: 10
     }
   },
   created () {
@@ -30,6 +38,8 @@ export default {
       return new Promise(resolve => setTimeout(resolve, ms))
     },
     comecaloop: async function () {
+      this.geracao = 1
+      this.population = this.generateRandomPopulation()
       while (!this.checkIfTargetIsLocated(this.population, this.target)) {
         for (let i = 0; i < this.population.length; i++) {
           this.population[i].fitness = this.calculateDistanceOfColor(this.target, this.population[i].color)
@@ -38,7 +48,7 @@ export default {
         let selected = this.calculatePercentOfMating(this.population)
         this.population = this.mate(selected)
         this.geracao++
-        await this.espera(1)
+        await this.espera(this.velocidade)
       }
     },
     generateRandomPopulation: function () {
@@ -59,9 +69,9 @@ export default {
       return population
     },
     calculateDistanceOfColor: function (target, color) {
-      let rDistance = Math.pow((color.r - target.r), 2)
-      let gDistance = Math.pow((color.g - target.g), 2)
-      let bDistance = Math.pow((color.b - target.b), 2)
+      let rDistance = Math.pow((parseInt(color.r) - parseInt(target.color.r)), 2)
+      let gDistance = Math.pow((parseInt(color.g) - parseInt(target.color.g)), 2)
+      let bDistance = Math.pow((parseInt(color.b) - parseInt(target.color.b)), 2)
       let totalDistance = rDistance + gDistance + bDistance
       totalDistance = Math.sqrt(totalDistance)
       return totalDistance
@@ -131,7 +141,7 @@ export default {
     checkIfTargetIsLocated: function (population, target) {
       for (let i = 0; i < population.length; i++) {
         let fitness = this.calculateDistanceOfColor(target, population[i].color)
-        if (fitness === 0) {
+        if (fitness === 0 || fitness === '0') {
           this.population[i].stroke = 'yellow'
           return true
         }
@@ -143,13 +153,13 @@ export default {
       let random = Math.floor(Math.random() * 100)
       if (random <= 10) {
         let randomRGB = Math.floor(Math.random() * 3) + 1
-        if (randomRGB === 1) {
+        if (randomRGB === 1 || randomRGB === '1') {
           chromossome.color.r = Math.floor(Math.random() * 255)
         }
-        if (randomRGB === 2) {
+        if (randomRGB === 2 || randomRGB === '2') {
           chromossome.color.g = Math.floor(Math.random() * 255)
         }
-        if (randomRGB === 3) {
+        if (randomRGB === 3 || randomRGB === '3') {
           chromossome.color.b = Math.floor(Math.random() * 255)
         }
       }
