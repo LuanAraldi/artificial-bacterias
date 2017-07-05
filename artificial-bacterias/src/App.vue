@@ -17,6 +17,9 @@
         <bacteria :red="asset.color.r" :green="asset.color.g" :blue="asset.color.b" :stroke="asset.stroke"></bacteria>
       </span>
     </div>
+    <span v-for="(fitness, index) in globalfitness" :key="index">
+      {{fitness}},
+    </span>
   </div>
 </template>
 
@@ -34,7 +37,8 @@ export default {
       population: {},
       target: { color: { r: 12, g: 162, b: 88 }, stroke: 'black' },
       velocidade: 10,
-      targetcolor: {}
+      targetcolor: {},
+      globalfitness: []
     }
   },
   created () {
@@ -45,7 +49,6 @@ export default {
       return new Promise(resolve => setTimeout(resolve, ms))
     },
     comecaloop: async function () {
-      console.log(this.targetcolor)
       this.target.color.r = this.targetcolor.rgba.r
       this.target.color.g = this.targetcolor.rgba.g
       this.target.color.b = this.targetcolor.rgba.b
@@ -69,9 +72,9 @@ export default {
           id: Math.floor(Math.random() * 999999),
           stroke: 'black',
           color: {
-            r: Math.floor(Math.random() * 255),
-            g: Math.floor(Math.random() * 255),
-            b: Math.floor(Math.random() * 255)
+            r: Math.floor(Math.random() * 256),
+            g: Math.floor(Math.random() * 256),
+            b: Math.floor(Math.random() * 256)
           },
           fitness: 0
         }
@@ -150,6 +153,22 @@ export default {
       return nextGeneration
     },
     checkIfTargetIsLocated: function (population, target) {
+      let global = 0
+      for (let i = 0; i < population.length; i++) {
+        let local = parseInt(this.calculateDistanceOfColor(target, population[i].color))
+        if (local === 0) {
+          this.population[i].stroke = 'yellow'
+        } else {
+          this.population[i].stroke = 'black'
+        }
+        global += local
+      }
+      this.globalfitness.push((7650 - global))
+      if (global > 0) {
+        return false
+      }
+      return true
+      /*
       for (let i = 0; i < population.length; i++) {
         let fitness = this.calculateDistanceOfColor(target, population[i].color)
         if (fitness === 0 || fitness === '0') {
@@ -157,21 +176,22 @@ export default {
           return true
         }
       }
+      */
 
-      return false
+      // return false
     },
     mutate: function (chromossome) {
       let random = Math.floor(Math.random() * 100)
       if (random <= 10) {
         let randomRGB = Math.floor(Math.random() * 3) + 1
         if (randomRGB === 1 || randomRGB === '1') {
-          chromossome.color.r = Math.floor(Math.random() * 255)
+          chromossome.color.r = Math.floor(Math.random() * 256)
         }
         if (randomRGB === 2 || randomRGB === '2') {
-          chromossome.color.g = Math.floor(Math.random() * 255)
+          chromossome.color.g = Math.floor(Math.random() * 256)
         }
         if (randomRGB === 3 || randomRGB === '3') {
-          chromossome.color.b = Math.floor(Math.random() * 255)
+          chromossome.color.b = Math.floor(Math.random() * 256)
         }
       }
       return chromossome
