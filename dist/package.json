@@ -1,0 +1,10 @@
+{
+ "name": "artificial-bacterias",
+ "version": "1.0.0",
+ "description": "Artificial bacterias sampling genetic algorithms",
+ "author": "Luan Carlos Araldi",
+ "private": true,
+ "scripts": {
+   "postinstall": "npm install express"
+ }
+}
